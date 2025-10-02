@@ -1,0 +1,21 @@
+version: v1
+plugins:
+  - plugin: buf.build/bufbuild/es:v1.7.1
+    out: ../server/src/gen
+    opt:
+      - target=ts
+      - import_extension=.js
+  - plugin: buf.build/connectrpc/es:v1.6.1
+    out: ../server/src/gen
+    opt:
+      - target=ts
+      - import_extension=.js
+  - plugin: buf.build/bufbuild/es:v1.7.1
+    out: ../web/src/gen
+    opt:
+      - target=ts
+  - plugin: buf.build/connectrpc/es:v1.6.1
+    out: ../web/src/gen
+    opt:
+      - target=ts
+

@@ -1,0 +1,10 @@
+{
+  "name": "project-pluto-assessment",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": ["proto","server","web"],
+  "scripts": {
+    "dev": "./run.sh",
+    "codegen": "pnpm dlx @bufbuild/buf generate"
+  }
+}

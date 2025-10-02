@@ -1,0 +1,9 @@
+node_modules
+.pnpm-store
+.DS_Store
+.env*
+
+playwright-tests/playwright-report/
+web/playwright-report/
+
+playwright-tests/playwright-report/
