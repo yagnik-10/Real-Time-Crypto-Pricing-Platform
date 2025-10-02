@@ -235,49 +235,80 @@ export default function Page() {
   }
 
   return (
-    <main style={{ padding: 16, fontFamily: 'sans-serif' }}>
-      <h1>Crypto Prices</h1>
-      <p data-testid="connection-status">Status: {status}</p>
-      <div style={{ display: 'flex', gap: 8 }}>
-        <input
-          placeholder="e.g. BTCUSD"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+    <main className="container">
+      <div className="siteHeader">
+        <img
+          className="logoBig"
+          src="/coinflow.png"
+          alt="Coinflow"
+          onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/_next/cache/coinflow.png'; }}
         />
-        <button onClick={addTicker}>Add</button>
+        <h1 className="siteTitle">Real‑Time Crypto Prices</h1>
       </div>
-      <ul data-testid="ticker-list">
-        {sorted.map((s) => (
-          <li key={s} data-testid="ticker-row" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <strong style={{ width: 120 }}>{s}</strong>
-            <span
-              key={`${s}-${justUpdated[s] ?? 0}`}
-              data-testid="price"
-              style={{
-                minWidth: 120,
-                display: 'inline-block',
-                fontWeight: justUpdated[s] ? 'bold' : 'normal',
-                background: justUpdated[s] ? 'rgba(255,230,150,0.9)' : '#fff',
-                transition: 'background 600ms ease, font-weight 600ms ease',
-              }}
-            >
-              {loading[s] && prices[s] == null ? (
-                <span data-testid="loading" style={{ display: 'inline-block' }}>
-                  <span style={{
-                    display: 'inline-block', width: 8, height: 8, marginRight: 4,
-                    borderRadius: '50%', background: '#999', animation: 'pulse 1s infinite'
-                  }} />
-                  <span>Loading…</span>
+      <div className="card">
+        <div className="header">
+          <div className="title"></div>
+          <form className="controls" onSubmit={(e) => { e.preventDefault(); void addTicker(); }}>
+            <input
+              className="input"
+              placeholder="e.g. BTCUSD"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            <button type="submit" className="button">Add</button>
+          </form>
+        </div>
+        <div className="status" data-testid="connection-status">
+          <span className={`dot ${status === 'connected' ? 'connected' : status === 'retrying' ? 'retrying' : ''}`} />
+          <span>Status: {status}</span>
+          {symbols.length > 0 && (
+            <span className="pill">{symbols.length} tickers</span>
+          )}
+        </div>
+        <div className="examples">
+          <div>Try adding these popular pairs:</div>
+          <div className="chips">
+            {[
+              'BTCUSD','ETHUSD','SOLUSD','XRPUSD','ADAUSD','DOGEUSD','AVAXUSD','DOTUSD','MATICUSD','LTCUSD',
+              'BCHUSD','LINKUSD','ATOMUSD','NEARUSD','FILUSD','APTUSD','ARBUSD','OPUSD','SUIUSD','PEPEUSD'
+            ].map((ex) => (
+              <span key={ex} className="chip" onClick={() => setInput(ex)}>
+                <span className="sym">{ex}</span>
+                <span className="name">{ex.replace('USD',' / USD')}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="list" data-testid="ticker-list">
+          {sorted.map((s) => (
+            <div className="row" key={s} data-testid="ticker-row">
+              <div className="cell symbol">{s}</div>
+              <div className="cell price" key={`${s}-${justUpdated[s] ?? 0}`} data-testid="price">
+                <span className={`priceValue ${justUpdated[s] ? 'priceFlash' : ''}`}>
+                  {loading[s] && prices[s] == null ? (
+                    <span data-testid="loading" style={{ display: 'inline-block' }}>
+                      <span style={{
+                        display: 'inline-block', width: 8, height: 8, marginRight: 4,
+                        borderRadius: '50%', background: '#999', animation: 'pulse 1s infinite'
+                      }} />
+                      <span>Loading…</span>
+                    </span>
+                  ) : (
+                    prices[s] != null ? `$${prices[s]}` : '—'
+                  )}
                 </span>
-              ) : (
-                prices[s] ?? '—'
-              )}
-            </span>
-            <button data-testid="remove-ticker" onClick={() => removeTicker(s)}>Remove</button>
-          </li>
-        ))}
-      </ul>
-      <style>{`@keyframes pulse { 0% { opacity: 0.3 } 50% { opacity: 1 } 100% { opacity: 0.3 } }`}</style>
+              </div>
+              <div className="cell actions">
+                <button className="remove" data-testid="remove-ticker" onClick={() => removeTicker(s)}>Remove</button>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="disclaimer">
+          Prices are sourced from TradingView free data and may be delayed or inaccurate.
+          This app is for demonstration only and not for trading decisions.
+        </div>
+      </div>
     </main>
   );
 }
