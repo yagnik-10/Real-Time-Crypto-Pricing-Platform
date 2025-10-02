@@ -1,4 +1,3 @@
-# Project Pluto – Fullstack Coding Assessment Submission
 
 ## Executive Summary
 
